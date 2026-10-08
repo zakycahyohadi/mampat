@@ -4,7 +4,7 @@
    3. font Word diganti kembaran yang ukurannya sama (Calibri → Carlito, Times New Roman → Tinos, …)
    4. halaman yang kepanjangan dipecah per baris / per baris tabel
    5. teks, garis, latar, gambar, dan link digambar ulang ke PDF dengan pdf-lib:
-      teks tetap bisa dipilih & dicari, font ditanam (subset, lewat assets/ttf-subset.js) supaya file kecil */
+      teks tetap bisa dipilih & dicari, font ditanam (subset, lewat assets/js/ttf-subset.js) supaya file kecil */
 (function () {
   "use strict";
   const M = window.Mampat;
@@ -43,7 +43,7 @@
       rec.bytes = new Uint8Array(await res.arrayBuffer());
       const face = new FontFace("mp-" + key, rec.bytes, { weight: bold ? "700" : "400", style: italic ? "italic" : "normal" });
       await face.load(); document.fonts.add(face);
-      rec.metrics = window.MampatTTF.parse(rec.bytes);
+      rec.metrics = window.TtfSubset.parse(rec.bytes);
     } catch (e) { console.warn(e); rec.failed = true; }
     loaded.set(id, rec);
     return rec;
@@ -283,7 +283,7 @@
           : bold ? (italic ? "HelveticaBoldOblique" : "HelveticaBold") : italic ? "HelveticaOblique" : "Helvetica";
         f = { pdf: await doc.embedFont(StandardFonts[name]), ttf: null, metrics: null };
       } else {
-        const ttf = window.MampatTTF.pdfFont(doc, rec.bytes);
+        const ttf = window.TtfSubset.pdfFont(doc, rec.bytes);
         ttfs.push(ttf);
         f = { ttf, metrics: ttf.metrics, res: "MP" + ttfs.length };
       }
@@ -462,5 +462,5 @@
   function dataBytes(src) { const b = atob(src.slice(src.indexOf(",") + 1)); const u = new Uint8Array(b.length); for (let i = 0; i < b.length; i++) u[i] = b.charCodeAt(i); return u; }
   function canvasBytes(c, type) { return new Promise((res, rej) => c.toBlob((b) => (b ? b.arrayBuffer().then((a) => res(new Uint8Array(a))) : rej(new Error("encode"))), type)); }
 
-  window.WordKePdf = { render, convert, familyKey };
+  window.DocxToPdf = { render, convert, familyKey };
 })();

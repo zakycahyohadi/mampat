@@ -9,19 +9,19 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="PDF ke Word tanpa upload · Mampat">
 <meta property="og:description" content="Ubah PDF jadi dokumen Word (.docx) yang bisa diedit, langsung di browser. Teks, tebal/miring, paragraf, dan gambar ikut. Tanpa upload, tanpa batas, tanpa iklan.">
-<meta property="og:image" content="../icon-512.png">
+<meta property="og:image" content="../assets/icons/icon-512.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="icon" type="image/png" href="../favicon-32.png">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" href="../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mampat">
-<script src="../assets/mampat.js"></script>
+<script src="../assets/js/core.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..600&display=optional">
-<link rel="stylesheet" href="../assets/mampat.css">
+<link rel="stylesheet" href="../assets/css/main.css">
 </head>
 <body>
 <div class="app">
@@ -93,13 +93,13 @@
   <mampat-foot data-tool="pdf-ke-word"></mampat-foot>
 </div>
 
-<script src="../assets/pdf-alat.js"></script>
-<script src="../assets/zip.js"></script>
-<script src="../assets/pdf-ke-word.js"></script>
+<script src="../assets/js/pdf-tools.js"></script>
+<script src="../assets/js/zip-writer.js"></script>
+<script src="../assets/js/pdf-to-docx.js"></script>
 <script>
 (function () {
   "use strict";
-  const M = window.Mampat, A = window.Alat, P = window.PdfKeWord, $ = A.$;
+  const M = window.Mampat, A = window.PdfTools, P = window.PdfToDocx, $ = A.$;
   const TOOL = "pdf-ke-word";
   const V = A.views(["vPick", "vEdit", "vWork", "vDone"]);
   let doc = null, busy = false, result = null, loadSeq = 0;

@@ -1,1 +1,10 @@
+# sistem operasi
 .DS_Store
+Thumbs.db
+
+# editor
+.vscode/
+.idea/
+
+# node (belum ada dependensi, tapi berjaga-jaga)
+node_modules/

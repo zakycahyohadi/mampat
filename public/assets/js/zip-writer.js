@@ -63,5 +63,5 @@
     ev.setUint32(12, cdSize, true); ev.setUint32(16, offset, true);
     return new Blob([...parts, ...central, end], { type: "application/zip" });
   }
-  window.MampatZip = { zip, crc32 };
+  window.ZipWriter = { zip, crc32 };
 })();

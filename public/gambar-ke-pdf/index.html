@@ -9,19 +9,19 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Gambar ke PDF tanpa upload · Mampat">
 <meta property="og:description" content="Ubah foto JPG atau PNG jadi satu PDF, dengan ukuran kertas A4, F4/Folio, Letter, atau ikuti ukuran gambar. Diproses di perangkatmu: tanpa upload, tanpa batas, tanpa iklan.">
-<meta property="og:image" content="../icon-512.png">
+<meta property="og:image" content="../assets/icons/icon-512.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="icon" type="image/png" href="../favicon-32.png">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" href="../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mampat">
-<script src="../assets/mampat.js"></script>
+<script src="../assets/js/core.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..600&display=optional">
-<link rel="stylesheet" href="../assets/mampat.css">
+<link rel="stylesheet" href="../assets/css/main.css">
 <style>
 /* pratinjau kertas: bentuk halaman + posisi gambar mengikuti pengaturan */
 .paper { position: relative; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.2); overflow: hidden; max-width: 92%; max-height: 92%; }
@@ -121,11 +121,11 @@
   <mampat-foot data-tool="gambar-ke-pdf"></mampat-foot>
 </div>
 
-<script src="../assets/pdf-alat.js"></script>
+<script src="../assets/js/pdf-tools.js"></script>
 <script>
 (function () {
   "use strict";
-  const M = window.Mampat, A = window.Alat, $ = A.$;
+  const M = window.Mampat, A = window.PdfTools, $ = A.$;
   const TOOL = "gambar-ke-pdf";
   const V = A.views(["vPick", "vEdit", "vWork", "vDone"]);
   const MM = 72 / 25.4;

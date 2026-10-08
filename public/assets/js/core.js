@@ -15,7 +15,7 @@ window.MAMPAT_CONFIG = {
 (function () {
   "use strict";
   const c = window.MAMPAT_CONFIG || {};
-  const ROOT = new URL("../", document.currentScript.src).href;
+  const ROOT = new URL("../../", document.currentScript.src).href; // core.js ada di assets/js/
   const KB = 1024, MB = 1048576;
 
   // ---------- analytics ----------

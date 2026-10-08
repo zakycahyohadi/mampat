@@ -9,20 +9,20 @@
 <meta property="og:type" content="website">
 <meta property="og:title" content="Word ke PDF tanpa upload · Mampat">
 <meta property="og:description" content="Ubah dokumen Word (.docx) jadi PDF langsung di browser. Teks tetap bisa dipilih, link tetap bisa diklik. Tanpa upload, tanpa batas, tanpa iklan.">
-<meta property="og:image" content="../icon-512.png">
+<meta property="og:image" content="../assets/icons/icon-512.png">
 <link rel="manifest" href="../manifest.webmanifest">
-<link rel="icon" type="image/png" href="../favicon-32.png">
-<link rel="apple-touch-icon" href="../apple-touch-icon.png">
+<link rel="icon" type="image/png" href="../assets/icons/favicon-32.png">
+<link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Mampat">
-<script src="../assets/mampat.js"></script>
+<script src="../assets/js/core.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@100..125,500..900&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400..700&family=JetBrains+Mono:wght@400..600&display=optional">
-<link rel="stylesheet" href="../assets/mampat.css">
+<link rel="stylesheet" href="../assets/css/main.css">
 <style>
 /* pratinjau dokumen: halaman Word diperkecil supaya muat di layar */
 .wprev { position: relative; background: var(--surface-2); border: 1px solid var(--line); border-radius: var(--r); overflow: auto; max-height: min(78vh, 900px); }
@@ -105,13 +105,13 @@
   <mampat-foot data-tool="word-ke-pdf"></mampat-foot>
 </div>
 
-<script src="../assets/pdf-alat.js"></script>
-<script src="../assets/ttf-subset.js"></script>
-<script src="../assets/word-ke-pdf.js"></script>
+<script src="../assets/js/pdf-tools.js"></script>
+<script src="../assets/js/ttf-subset.js"></script>
+<script src="../assets/js/docx-to-pdf.js"></script>
 <script>
 (function () {
   "use strict";
-  const M = window.Mampat, A = window.Alat, W = window.WordKePdf, $ = A.$;
+  const M = window.Mampat, A = window.PdfTools, W = window.DocxToPdf, $ = A.$;
   const TOOL = "word-ke-pdf";
   const V = A.views(["vPick", "vEdit", "vWork", "vDone"]);
   const isDocx = (f) => /\.docx$/i.test(f.name) || f.type === "application/vnd.openxmlformats-officedocument.wordprocessingml.document";

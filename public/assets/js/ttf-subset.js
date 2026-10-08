@@ -163,5 +163,5 @@
       },
     };
   }
-  root.MampatTTF = { parse, subset, pdfFont };
+  root.TtfSubset = { parse, subset, pdfFont };
 })(typeof window !== "undefined" ? window : globalThis);

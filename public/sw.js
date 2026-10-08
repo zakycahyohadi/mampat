@@ -1,10 +1,10 @@
 // Service worker Mampat: simpan semua alat supaya tetap jalan tanpa internet.
-const CACHE = "mampat-v7";
+const CACHE = "mampat-v8";
 const PAGES = ["./", "./kompres/", "./gabung/", "./pisah/", "./atur-halaman/", "./gambar-ke-pdf/", "./pdf-ke-gambar/", "./word-ke-pdf/", "./pdf-ke-word/"];
 const CORE = [...PAGES,
-  "./assets/mampat.css", "./assets/mampat.js", "./assets/pdf-alat.js", "./assets/zip.js",
-  "./assets/word-ke-pdf.js", "./assets/ttf-subset.js", "./assets/pdf-ke-word.js",
-  "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./favicon-32.png", "./apple-touch-icon.png",
+  "./assets/css/main.css", "./assets/js/core.js", "./assets/js/pdf-tools.js", "./assets/js/zip-writer.js",
+  "./assets/js/docx-to-pdf.js", "./assets/js/ttf-subset.js", "./assets/js/pdf-to-docx.js",
+  "./manifest.webmanifest", "./assets/icons/icon-192.png", "./assets/icons/icon-512.png", "./assets/icons/favicon-32.png", "./assets/icons/apple-touch-icon.png",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf-lib/1.17.1/pdf-lib.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js",
   "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js",

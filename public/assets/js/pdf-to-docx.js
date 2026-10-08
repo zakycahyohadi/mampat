@@ -3,7 +3,7 @@
    2. potongan disusun jadi baris → paragraf (rata kiri/tengah/kanan/rata kanan-kiri, indentasi, jarak)
    3. gambar diambil dari PDF dalam resolusi asli dan ditaruh di urutan yang sama
    4. halaman hasil scan (tanpa teks) dimasukkan sebagai gambar
-   5. ditulis jadi .docx standar (ZIP berisi XML) dengan assets/zip.js */
+   5. ditulis jadi .docx standar (ZIP berisi XML) dengan assets/js/zip-writer.js */
 (function () {
   "use strict";
   const PT = 20, EMU = 12700; // 1 pt = 20 twip = 12700 EMU
@@ -408,8 +408,8 @@
       { name: "word/_rels/document.xml.rels", data: enc.encode(rels) },
       ...media.map((m) => ({ name: "word/media/" + m.name, data: m.data })),
     ];
-    const blob = window.MampatZip.zip(files);
+    const blob = window.ZipWriter.zip(files);
     return { blob: new Blob([blob], { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" }), stats };
   }
-  window.PdfKeWord = { convert, fontInfo };
+  window.PdfToDocx = { convert, fontInfo };
 })();

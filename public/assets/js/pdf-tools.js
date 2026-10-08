@@ -213,5 +213,5 @@
     return api;
   }
 
-  window.Alat = { $, ICON, isPdf, isImage, pickFiles, openPdf, thumb, rethumb, sortable, moveBy, parseRanges, rangeLabel, compactRanges, pad, views };
+  window.PdfTools = { $, ICON, isPdf, isImage, pickFiles, openPdf, thumb, rethumb, sortable, moveBy, parseRanges, rangeLabel, compactRanges, pad, views };
 })();
