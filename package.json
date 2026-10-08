@@ -1,0 +1,17 @@
+{
+  "name": "mampat",
+  "version": "2.2.0",
+  "description": "Alat PDF yang jalan di browser: kompres, gabung, pisah, atur halaman, gambar ↔ PDF, Word ↔ PDF. Tanpa upload.",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "author": "Zaky Cahyo Hadi",
+  "homepage": "https://zakycahyohadi.github.io/mampat/",
+  "repository": { "type": "git", "url": "git+https://github.com/zakycahyohadi/mampat.git" },
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "start": "node tests/lib/server.mjs",
+    "test": "node tests/e2e.test.mjs",
+    "fixtures": "node tests/tools/make-pdf-fixtures.mjs && python3 tests/tools/make-docx-fixtures.py"
+  }
+}
