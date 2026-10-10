@@ -292,6 +292,7 @@ footer { contain-intrinsic-height: auto 80px; }
           <button id="retarget" class="ghost" type="button">Ubah target</button>
           <button id="another" class="ghost" type="button">File lain</button>
         </div>
+        <p class="note savehint" id="saveHint"></p>
         <details class="log"><summary>Rincian proses</summary><pre id="log"></pre></details>
       </div>
     </div>
@@ -335,7 +336,7 @@ footer { contain-intrinsic-height: auto 80px; }
       <details><summary>Kenapa PDF saya cuma bisa turun sedikit?</summary><p>Lihat bagian "Isi file" setelah memilih PDF. Kalau isinya kebanyakan teks dan font, tidak banyak yang bisa dikecilkan tanpa mengubah halaman jadi gambar. Mampat menunjukkan batas terkecil yang masih menjaga teks, jadi kamu tahu alasannya.</p></details>
       <details><summary>Bagaimana dengan PDF yang ada tanda tangan digitalnya?</summary><p>Tanda tangan digital mengunci isi file. Mengubah apa pun, termasuk mengompres dengan alat apa saja, membuat tanda tangannya tidak sah lagi. Mampat mendeteksinya dan memberi peringatan sebelum kamu memproses. Tampilan tanda tangan di halaman tetap ada.</p></details>
       <details><summary>Bisa dipakai tanpa internet?</summary><p>Bisa. Setelah situsnya dibuka sekali, Mampat tersimpan di browser dan tetap jalan walaupun offline. Di Chrome atau Edge kamu juga bisa menekan "Pasang aplikasi" supaya Mampat muncul seperti aplikasi biasa.</p></details>
-      <details><summary>Kenapa hasilnya sedikit di bawah target, bukan persis?</summary><p>Mampat menyisakan sedikit ruang supaya hasilnya tidak pernah melewati batas. Di antara pengaturan yang muat, yang dipilih selalu yang kualitasnya paling tinggi.</p></details>
+      <details><summary>Kenapa hasilnya sedikit di bawah target, bukan persis?</summary><p>Mampat membidik sekitar 86–93% dari target, misalnya ±900 KB untuk target 1 MB. Banyak situs pendaftaran menghitung 1 MB = 1.000.000 byte, sedikit lebih kecil dari 1 MB di komputer, jadi sisa ruang ini membuat file kamu tetap lolos. Ruang yang tersisa dipakai untuk kualitas setinggi mungkin.</p></details>
       <details><summary>Seberapa besar file yang bisa diproses?</summary><p>Tergantung memori perangkat. File ratusan MB biasanya lancar di laptop. Di HP, file besar tetap bisa, tapi prosesnya lebih lama.</p></details>
       <details><summary>Target saya tidak tercapai. Harus bagaimana?</summary><p>Nyalakan Hitam-putih di pengaturan lanjutan, hapus halaman yang tidak perlu, atau naikkan targetnya. Sebagai patokan, satu halaman A4 hasil scan yang masih enak dibaca butuh sekitar 30–60 KB.</p></details>
       <details><summary>Bisa untuk PDF yang dikunci kata sandi?</summary><p>Bisa. Mampat akan meminta kata sandinya, membuka kuncinya di perangkat kamu (kata sandinya tidak dikirim ke mana pun), lalu mengompresnya. PDF yang hanya dikunci izin dibuka otomatis. Hasilnya tidak lagi berkata sandi.</p></details>
@@ -1223,6 +1224,38 @@ footer { contain-intrinsic-height: auto 80px; }
     return bestFit;
   }
 
+  // Mendekatkan ke target: setelah ada hasil yang muat, kualitas JPEG disetel halus (tidak terikat anak tangga QUALS)
+  // supaya hasilnya 90–97% dari target. Contoh: target 1 MB → ±920–990 KB, tidak pernah lewat 1 MB.
+  async function refine(kind, target, best, consider) {
+    if (!best || !best.fits || best.mode !== kind) return;
+    const levels = DPI_LEVELS.filter((d) => d <= S.maxDpi && d >= (kind === "smart" ? 34 : 24));
+    const floor = target * 0.92, goal = target * 0.97, qMax = 0.95; // target di sini = sasaran aman (93% target pengguna)
+    let lo = { dpi: best.dpi, q: best.q, size: best.bytes.length }, hi = null;
+    // perkiraan kualitas di antara dua titik (ukuran dianggap naik eksponensial terhadap kualitas)
+    const between = (a, b) => { const t = (Math.log(goal) - Math.log(a.size)) / (Math.log(b.size) - Math.log(a.size)); return a.q + (b.q - a.q) * Math.max(0.15, Math.min(0.85, t)); };
+    for (let i = 1; i <= 3 && lo.size < floor; i++) {
+      let cand;
+      const need = goal / lo.size, di = levels.indexOf(lo.dpi);
+      // resolusi berikutnya kira-kira menambah ukuran sebanding luas piksel: kalau masih muat, naikkan resolusi dulu (lebih tajam)
+      const upDpi = di > 0 && !(hi && hi.dpi === levels[di - 1]) ? levels[di - 1] : 0;
+      if (hi && hi.dpi === lo.dpi) cand = { dpi: lo.dpi, q: between(lo, hi) };
+      else if (upDpi && Math.pow(upDpi / lo.dpi, 2) <= need * 1.02) cand = { dpi: upDpi, q: lo.q };
+      // ukuran JPEG naik kira-kira e^(3·Δkualitas)
+      else if (lo.q < qMax - 0.02) cand = { dpi: lo.dpi, q: Math.min(qMax, lo.q + Math.max(0.03, Math.min(0.25, Math.log(need) / 3))) };
+      else if (upDpi) cand = { dpi: upDpi, q: lo.q };
+      else break;
+      if (Math.abs(cand.q - lo.q) < 0.01 && cand.dpi === lo.dpi) break;
+      cand.q = Math.round(cand.q * 1000) / 1000;
+      const bytes = kind === "smart"
+        ? await buildSmart(cand.dpi, cand.q, S.gray, (f) => setWork(0.9 + 0.09 * f, "Mendekatkan ke target · percobaan " + i))
+        : await (S.lib ? buildRasterInPlace : buildRasterFresh)(cand.dpi, cand.q, S.gray, (n) => setWork(0.9 + 0.09 * (n / S.n), "Mendekatkan ke target · percobaan " + i));
+      const ok = bytes.length <= target;
+      log("Mendekatkan: " + cand.dpi + " dpi, JPEG " + Math.round(cand.q * 100) + "% → " + fmt(bytes.length) + (ok ? "  ✓" : "  ✗"));
+      consider(bytes, { mode: kind, dpi: cand.dpi, q: cand.q, rank: (kind === "smart" ? 1e6 : 0) + cand.dpi * 100 + cand.q * 100 });
+      if (ok) lo = Object.assign(cand, { size: bytes.length }); else hi = Object.assign(cand, { size: bytes.length });
+    }
+  }
+
   async function run() {
     const target = S.target;
     if (!S.file || !target || S.busy || !S.anat || S.anat.encrypted) return;
@@ -1231,9 +1264,13 @@ footer { contain-intrinsic-height: auto 80px; }
     show("sWork"); setWork(0, "Menyiapkan…");
     const t0 = performance.now();
     let best = null;
+    // sasaran aman: maksimal 93% dari target (1 MB → ±952 KB), supaya tetap lolos portal yang menghitung 1 MB = 1.000.000 byte.
+    // Hasil di antara 93% dan 100% hanya dipakai kalau tidak ada yang lebih kecil; lewat target tidak pernah dipilih.
+    const aim = Math.floor(target * 0.93);
+    const tier = (n) => (n <= aim ? 2 : n <= target ? 1 : 0);
     const consider = (bytes, info) => {
-      const fits = bytes.length <= target;
-      if (!best || (fits && !best.fits) || (fits === best.fits && (fits ? info.rank > best.rank : bytes.length < best.bytes.length))) best = Object.assign({ bytes, fits }, info);
+      const t = tier(bytes.length), fits = t > 0;
+      if (!best || t > best.tier || (t === best.tier && (fits ? info.rank > best.rank : bytes.length < best.bytes.length))) best = Object.assign({ bytes, fits, tier: t }, info);
     };
     log("Asli " + fmt(S.file.size) + " · " + S.n + " halaman · target " + fmt(target));
     try {
@@ -1246,12 +1283,13 @@ footer { contain-intrinsic-height: auto 80px; }
         let done = false;
         if (plan.mode === "smart" || canSmart()) {
           const sp = plan.mode === "smart" ? plan : await choose(estSmart, target, [0.55, 0.4, 0.26, 0.14], 34);
-          if (plan.mode === "smart" || sp.fits) done = await attempts("smart", sp, target, consider);
+          if (plan.mode === "smart" || sp.fits) done = await attempts("smart", sp, aim, consider);
+          if (done) await refine("smart", aim, best, consider);
         }
         if (!done && !S.keepText && !plan.rasterNoHelp) {
           await ensureRasterSamples();
           const rp = plan.mode === "raster" ? plan : await choose(estRaster, target, [0.55, 0.4, 0.26, 0], 24);
-          await attempts("raster", rp, target, consider);
+          if (await attempts("raster", rp, aim, consider)) await refine("raster", aim, best, consider);
         }
         if (!best) best = { bytes: S.lossless || S.bytes, fits: false, mode: S.lossless ? "lossless" : "orig", rank: 0 };
       }
@@ -1271,6 +1309,7 @@ footer { contain-intrinsic-height: auto 80px; }
     const base = S.file.name.replace(/\.pdf$/i, "");
     S.result = { bytes: best.bytes, name: best.mode === "orig" ? S.file.name : base + "-compressed-" + sizeTag(size) + ".pdf" };
     show("sDone");
+    $("saveHint").textContent = M.saveHint();
     const pill = $("rPill");
     if (best.fits) { pill.className = "pill good"; pill.innerHTML = ico.ok + (best.mode === "orig" ? "Sudah di bawah target" : "Pas di bawah " + fmt(target)); }
     else { pill.className = "pill warn"; pill.innerHTML = ico.warn + "Belum mencapai " + fmt(target); }

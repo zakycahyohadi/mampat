@@ -83,7 +83,7 @@ test("semua halaman alat terbuka tanpa error & rapi di 320px", async (page) => {
   }
 });
 
-test("kompres: hasil tidak melewati target", async (page) => {
+test("kompres: hasil di bawah target tapi tidak jauh (80–95%)", async (page) => {
   await page.goto(base + "/kompres/");
   await pick(page, ["dokumen-a.pdf"]);
   await page.waitFor(`window.__mampat && window.__mampat.anat && !document.getElementById("go").disabled`);
@@ -92,6 +92,7 @@ test("kompres: hasil tidak melewati target", async (page) => {
   await page.waitFor(`!document.getElementById("sDone").hidden`, 120000);
   const pdf = await page.captureDownload("#save");
   assert(pdf.length <= 100 * 1024, "hasil " + pdf.length + " B > 100 KB");
+  assert(pdf.length >= 80 * 1024 && pdf.length <= 95 * 1024, "hasil " + Math.round(pdf.length / 1024) + " KB, seharusnya ±86–93 KB");
   const info = await inspectPdf(page, pdf);
   assert(info.pages === 3, "halaman " + info.pages);
 });
