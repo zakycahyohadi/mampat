@@ -4,6 +4,17 @@ Semua perubahan penting dicatat di sini. Format mengikuti [Keep a Changelog](htt
 dan nomor versi mengikuti [Semantic Versioning](https://semver.org/lang/id/):
 `MAYOR.MINOR.PATCH` (mayor = perubahan besar, minor = fitur baru, patch = perbaikan).
 
+## [2.3.0] - 2026-10-10
+
+### Diubah
+- Kompres: hasil kini dekat dengan target, sekitar 86–93% (target 1 MB → ±900 KB), bukan 60–80%.
+  Sisa ruang dipakai untuk resolusi/kualitas lebih tinggi, dan tetap lolos situs yang menghitung 1 MB = 1.000.000 byte.
+
+### Ditambahkan
+- Simpan file sesuai perangkat: di iPhone yang memasang Mampat di layar utama, tombol Simpan membuka
+  lembar Bagikan → "Simpan ke File". Android & laptop langsung ke folder Download.
+- Petunjuk lokasi file di bawah tombol Simpan, dan FAQ "Di mana file hasil unduhan?" di beranda.
+
 ## [2.2.0] - 2026-10-08
 
 ### Diubah
@@ -40,6 +51,7 @@ dan nomor versi mengikuti [Semantic Versioning](https://semver.org/lang/id/):
 ### Ditambahkan
 - Kompres PDF ke ukuran yang ditentukan sendiri, langsung di browser.
 
+[2.3.0]: https://github.com/zakycahyohadi/mampat/compare/v2.2.0...v2.3.0
 [2.2.0]: https://github.com/zakycahyohadi/mampat/compare/v2.1.0...v2.2.0
 [2.1.0]: https://github.com/zakycahyohadi/mampat/compare/v2.0.0...v2.1.0
 [2.0.0]: https://github.com/zakycahyohadi/mampat/compare/v1.0.0...v2.0.0

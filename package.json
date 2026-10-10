@@ -1,6 +1,6 @@
 {
   "name": "mampat",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Alat PDF yang jalan di browser: kompres, gabung, pisah, atur halaman, gambar ↔ PDF, Word ↔ PDF. Tanpa upload.",
   "private": true,
   "type": "module",
