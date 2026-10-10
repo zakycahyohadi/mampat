@@ -1,5 +1,5 @@
 // Service worker Mampat: simpan semua alat supaya tetap jalan tanpa internet.
-const CACHE = "mampat-v8";
+const CACHE = "mampat-v9";
 const PAGES = ["./", "./kompres/", "./gabung/", "./pisah/", "./atur-halaman/", "./gambar-ke-pdf/", "./pdf-ke-gambar/", "./word-ke-pdf/", "./pdf-ke-word/"];
 const CORE = [...PAGES,
   "./assets/css/main.css", "./assets/js/core.js", "./assets/js/pdf-tools.js", "./assets/js/zip-writer.js",

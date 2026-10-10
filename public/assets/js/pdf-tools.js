@@ -195,7 +195,7 @@
   function views(ids) {
     const work = $("vWork"), done = $("vDone");
     if (work && !work.firstChild) work.innerHTML = '<div class="work">' + PRESS + '<div class="big" id="wPct">0%</div><div class="pbar"><i id="wBar"></i></div><div class="what" id="wWhat">Menyiapkan…</div><button id="wCancel" class="ghost" type="button">Batalkan</button></div>';
-    if (done && !done.firstChild) done.innerHTML = '<div class="done"><span class="pill good" id="dPill"></span><div class="res-num"><span class="big" id="dBig"></span><span class="from" id="dFrom"></span></div><div id="dNote"></div><div class="acts"><button id="dSave" class="cta" type="button">' + ICON.save + '<span id="dSaveTxt">Simpan</span></button><button id="dBack" class="ghost" type="button">Ubah lagi</button><button id="dNew" class="ghost" type="button">File lain</button></div></div>';
+    if (done && !done.firstChild) done.innerHTML = '<div class="done"><span class="pill good" id="dPill"></span><div class="res-num"><span class="big" id="dBig"></span><span class="from" id="dFrom"></span></div><div id="dNote"></div><div class="acts"><button id="dSave" class="cta" type="button">' + ICON.save + '<span id="dSaveTxt">Simpan</span></button><button id="dBack" class="ghost" type="button">Ubah lagi</button><button id="dNew" class="ghost" type="button">File lain</button></div><p class="note savehint" id="dHint"></p></div>';
     const api = {
       show(id) { ids.forEach((v) => { $(v).hidden = v !== id; }); if (id === "vWork" || id === "vDone") $("tool").scrollIntoView({ block: "nearest", behavior: "smooth" }); },
       cancelled: false,
@@ -205,6 +205,7 @@
         $("dBig").textContent = o.big; $("dFrom").textContent = o.from || "";
         $("dNote").innerHTML = o.note ? '<p class="note">' + o.note + "</p>" : "";
         $("dSaveTxt").textContent = o.saveText || "Simpan";
+        $("dHint").textContent = M.saveHint();
         api.show("vDone");
         setTimeout(() => $("dSave").focus({ preventScroll: true }), 50);
       },

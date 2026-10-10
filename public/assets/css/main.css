@@ -407,3 +407,5 @@ mampat-top .top { position: relative; }
 .pwcard .err { color: var(--bad); }
 .pwacts { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 10px; }
 .pwacts .cta { font-size: 16px; padding: 13px 16px; }
+/* petunjuk lokasi file hasil unduhan */
+.note.savehint { font-size: 12.5px; }

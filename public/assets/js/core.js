@@ -122,6 +122,19 @@ window.MAMPAT_CONFIG = {
   }
 
   // ---------- simpan file ----------
+  // Android & laptop: unduhan biasa → langsung masuk folder Download.
+  // iPhone/iPad yang memasang Mampat di layar utama: unduhan biasa sering hanya membuka pratinjau,
+  // jadi dipakai lembar Bagikan iOS → "Simpan ke File".
+  const ua = navigator.userAgent;
+  const isIOS = /iP(hone|ad|od)/.test(ua) || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+  const isAndroid = /Android/i.test(ua);
+  const isStandalone = () => navigator.standalone === true || !!(window.matchMedia && matchMedia("(display-mode: standalone)").matches);
+  // petunjuk lokasi file sesuai perangkat (ditampilkan di bawah tombol Simpan)
+  function saveHint() {
+    if (isAndroid) return "File masuk ke folder Download. Buka lewat aplikasi Files (atau Galeri/Dokumen) › Download.";
+    if (isIOS) return isStandalone() ? "Pilih \u201cSimpan ke File\u201d, lalu folder Unduhan. Filenya ada di aplikasi File." : "Ketuk Unduh kalau diminta. Filenya ada di aplikasi File › Unduhan.";
+    return "File masuk ke folder Download di komputer ini.";
+  }
   async function saveFile(blob, name) {
     let dl = null;
     try { dl = window.claude && window.claude.use ? await window.claude.use("downloads") : null; } catch (e) { dl = null; }
@@ -134,9 +147,16 @@ window.MAMPAT_CONFIG = {
         return false;
       }
     }
+    if (isIOS && isStandalone() && navigator.canShare) {
+      const file = new File([blob], name, { type: blob.type || "application/octet-stream" });
+      if (navigator.canShare({ files: [file] })) {
+        try { await navigator.share({ files: [file] }); toast("Kalau tadi memilih \u201cSimpan ke File\u201d, filenya ada di aplikasi File."); return true; }
+        catch (e) { if (e && e.name === "AbortError") { toast("Tidak jadi disimpan."); return false; } } // gagal lain: lanjut unduhan biasa
+      }
+    }
     const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
-    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 8000);
-    toast("Mengunduh " + name);
+    document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 60000);
+    toast(isAndroid ? "Tersimpan di folder Download: " + name : isIOS ? "Ketuk Unduh kalau diminta. Filenya masuk ke aplikasi File \u203a Unduhan." : "Mengunduh " + name + " ke folder Download.");
     return true;
   }
 
@@ -270,5 +290,5 @@ window.MAMPAT_CONFIG = {
   customElements.define("mampat-top", MampatTop);
   customElements.define("mampat-foot", MampatFoot);
 
-  window.Mampat = { ROOT, KB, MB, TOOLS, toolUrl, track, bucket, nf, fmt, toast, tick, esc, baseName, pdfError, saveFile, LIB, loadScript, whenIdle, loadLibs, warmLibs, unlockPdf, unlockNote };
+  window.Mampat = { ROOT, KB, MB, TOOLS, toolUrl, track, bucket, nf, fmt, toast, tick, esc, baseName, pdfError, saveFile, saveHint, LIB, loadScript, whenIdle, loadLibs, warmLibs, unlockPdf, unlockNote };
 })();
